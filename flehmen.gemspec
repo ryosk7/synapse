@@ -15,9 +15,9 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 3.1.0"
 
   spec.add_dependency "fast-mcp", "~> 1.5"
-  spec.add_dependency "activerecord", ">= 7.0"
-  spec.add_dependency "activesupport", ">= 7.0"
-  spec.add_dependency "railties", ">= 7.0"
+  spec.add_dependency "activerecord", "~> 7.0"
+  spec.add_dependency "activesupport", "~> 7.0"
+  spec.add_dependency "railties", "~> 7.0"
 
   spec.executables   = ["flehmen"]
   spec.bindir        = "bin"
