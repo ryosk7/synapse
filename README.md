@@ -1,6 +1,6 @@
 # Flehmen
 
-<img width="410" height="410" alt="flehmen-response-cat" src="https://github.com/user-attachments/assets/07d5848a-d35f-4046-9530-69c855cfd07e" />
+<img width="410" height="410" alt="flehmen-response-cat" src="https://github.com/ryosk7/flehmen/blob/master/logo/flehmen-response-cat.png?raw=true" />
 
 A Ruby gem that exposes Rails ActiveRecord models to Claude Desktop via the Model Context Protocol (MCP). It auto-discovers models, provides read-only query tools, and filters sensitive fields.
 
