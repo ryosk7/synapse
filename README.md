@@ -31,7 +31,6 @@ Flehmen.configure do |config|
     otp_secret reset_password_token encrypted_phone
   ]
   config.max_results = 100
-  config.enable_raw_sql = false
 end
 
 Flehmen.mount_in_rails(Rails.application, path_prefix: "/mcp", localhost_only: false)
@@ -63,7 +62,6 @@ Add to `claude_desktop_config.json`:
 | `sensitive_fields` | `Array<Symbol>` | See below | Fields masked with `[FILTERED]` across all models |
 | `model_sensitive_fields` | `Hash` | `{}` | Per-model sensitive fields |
 | `max_results` | `Integer` | `100` | Maximum records returned by any query |
-| `enable_raw_sql` | `Boolean` | `false` | Enables the `execute_query` tool when `true` |
 | `read_only_connection` | `Boolean` | `true` | Wraps all queries in `while_preventing_writes` to block accidental writes at the Rails level |
 
 ### Default sensitive fields
@@ -87,7 +85,6 @@ Flehmen.configure do |config|
     "User" => [:phone_number, :address]
   }
   config.max_results = 50
-  config.enable_raw_sql = true
 end
 ```
 
@@ -180,23 +177,6 @@ Arguments:
   offset           (optional)
 ```
 
-### flehmen_execute_query
-
-Executes raw SQL (only available when `enable_raw_sql: true`).
-
-```
-Arguments:
-  sql   (required) - SELECT statement
-  limit (optional)
-```
-
-Security constraints:
-- Only `SELECT` statements are allowed
-- `INSERT`, `UPDATE`, `DELETE`, `DROP`, `INTO`, `COPY`, `LOAD`, `PRAGMA`, etc. are blocked
-- SQL comments are stripped
-- `LIMIT` is enforced and capped by `max_results` even if specified in the query
-
-> **Note:** `enable_raw_sql` is disabled by default. Enable only in trusted environments.
 
 ## Resources
 

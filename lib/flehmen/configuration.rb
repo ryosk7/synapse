@@ -7,7 +7,6 @@ module Flehmen
                   :sensitive_fields,
                   :model_sensitive_fields,
                   :max_results,
-                  :enable_raw_sql,
                   :read_only_connection
 
     def initialize
@@ -21,7 +20,6 @@ module Flehmen
       ]
       @model_sensitive_fields = {}
       @max_results = 100
-      @enable_raw_sql = false
       @read_only_connection = true
     end
   end

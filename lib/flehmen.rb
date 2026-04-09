@@ -14,7 +14,6 @@ require_relative "flehmen/tools/find_record_tool"
 require_relative "flehmen/tools/search_records_tool"
 require_relative "flehmen/tools/count_records_tool"
 require_relative "flehmen/tools/show_associations_tool"
-require_relative "flehmen/tools/execute_query_tool"
 require_relative "flehmen/resources/schema_overview_resource"
 
 module Flehmen
@@ -81,7 +80,6 @@ module Flehmen
       server.register_tool(Tools::SearchRecordsTool)
       server.register_tool(Tools::CountRecordsTool)
       server.register_tool(Tools::ShowAssociationsTool)
-      server.register_tool(Tools::ExecuteQueryTool) if configuration.enable_raw_sql
     end
 
     def register_resources(server)
