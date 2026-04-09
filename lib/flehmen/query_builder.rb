@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module Synapse
+module Flehmen
   class QueryBuilder
     ALLOWED_OPERATORS = %w[eq not_eq gt gte lt lte like not_like in not_in null not_null].freeze
 
-    def initialize(model_info, config = Synapse.configuration)
+    def initialize(model_info, config = Flehmen.configuration)
       @klass = model_info[:klass]
       @column_names = model_info[:columns].map { |c| c[:name] }
       @config = config

@@ -1,4 +1,4 @@
-# Synapse
+# Flehmen
 
 A Ruby gem that exposes Rails ActiveRecord models to Claude Desktop via the Model Context Protocol (MCP). It auto-discovers models, provides read-only query tools, and filters sensitive fields.
 
@@ -7,7 +7,7 @@ A Ruby gem that exposes Rails ActiveRecord models to Claude Desktop via the Mode
 Add to your Gemfile:
 
 ```ruby
-gem "synapse", github: "ryosk7/synapse"
+gem "flehmen", github: "ryosk7/flehmen"
 ```
 
 ```bash
@@ -18,10 +18,10 @@ bundle install
 
 ### Rails initializer
 
-Create `config/initializers/synapse.rb`:
+Create `config/initializers/flehmen.rb`:
 
 ```ruby
-Synapse.configure do |config|
+Flehmen.configure do |config|
   config.exclude_models = []
   config.sensitive_fields = %i[
     password_digest encrypted_password token secret
@@ -32,7 +32,7 @@ Synapse.configure do |config|
   config.enable_raw_sql = false
 end
 
-Synapse.mount_in_rails(Rails.application, path_prefix: "/mcp", localhost_only: false)
+Flehmen.mount_in_rails(Rails.application, path_prefix: "/mcp", localhost_only: false)
 ```
 
 ### Claude Desktop
@@ -42,7 +42,7 @@ Add to `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
-    "synapse": {
+    "flehmen": {
       "command": "npx",
       "args": ["mcp-remote", "http://localhost:3000/mcp/sse", "--allow-http"]
     }
@@ -59,7 +59,7 @@ Add to `.mcp.json`:
 ```json
 {
   "mcpServers": {
-    "synapse": {
+    "flehmen": {
       "type": "sse",
       "url": "http://localhost:3000/mcp/sse"
     }
@@ -94,7 +94,7 @@ Replace `localhost:3000` with your service URL in production.
 ### Example
 
 ```ruby
-Synapse.configure do |config|
+Flehmen.configure do |config|
   config.exclude_models = [AdminUser, "InternalLog"]
   config.sensitive_fields += [:ssn, :credit_card_number]
   config.model_sensitive_fields = {
@@ -107,7 +107,7 @@ end
 
 ## Tools
 
-### synapse_list_models
+### flehmen_list_models
 
 Lists all discovered models.
 
@@ -128,7 +128,7 @@ Returns:
 ]
 ```
 
-### synapse_describe_model
+### flehmen_describe_model
 
 Returns schema details (columns, associations, enums) for a model.
 
@@ -137,7 +137,7 @@ Arguments:
   model_name (required) - e.g. "User"
 ```
 
-### synapse_find_record
+### flehmen_find_record
 
 Finds a single record by primary key.
 
@@ -147,7 +147,7 @@ Arguments:
   id         (required)
 ```
 
-### synapse_search_records
+### flehmen_search_records
 
 Searches records with structured conditions.
 
@@ -171,7 +171,7 @@ Conditions format:
 
 Supported operators: `eq`, `not_eq`, `gt`, `gte`, `lt`, `lte`, `like`, `not_like`, `in`, `not_in`, `null`, `not_null`
 
-### synapse_count_records
+### flehmen_count_records
 
 Counts records matching conditions.
 
@@ -181,7 +181,7 @@ Arguments:
   conditions (optional) - Same format as search_records
 ```
 
-### synapse_show_associations
+### flehmen_show_associations
 
 Fetches associated records for a given record.
 
@@ -194,7 +194,7 @@ Arguments:
   offset           (optional)
 ```
 
-### synapse_execute_query
+### flehmen_execute_query
 
 Executes raw SQL (only available when `enable_raw_sql: true`).
 
@@ -212,14 +212,14 @@ Security constraints:
 
 ## Resources
 
-### synapse://schema/overview
+### flehmen://schema/overview
 
 Returns a JSON overview of all models including columns, associations, and enums.
 
 ## Architecture
 
 ```
-Synapse.mount_in_rails(app)
+Flehmen.mount_in_rails(app)
   └── FastMcp.mount_in_rails (Rack middleware)
         ├── GET  /mcp/sse       → SSE connection (keep-alive)
         └── POST /mcp/messages  → JSON-RPC message handling

@@ -2,10 +2,10 @@
 
 require "json"
 
-module Synapse
+module Flehmen
   module Tools
     class CountRecordsTool < FastMcp::Tool
-      tool_name "synapse_count_records"
+      tool_name "flehmen_count_records"
       description 'Count records matching filter conditions. Example conditions: [{"field":"status","operator":"eq","value":"active"}]'
 
       arguments do
@@ -19,12 +19,12 @@ module Synapse
       )
 
       def call(model_name:, conditions: nil)
-        info = Synapse.model_registry.find_model(model_name)
+        info = Flehmen.model_registry.find_model(model_name)
         return JSON.generate({ error: "Model not found: #{model_name}" }) unless info
 
         parsed_conditions = conditions ? JSON.parse(conditions) : []
 
-        builder = Synapse::QueryBuilder.new(info)
+        builder = Flehmen::QueryBuilder.new(info)
         scope = builder.build(conditions: parsed_conditions, limit: nil)
         count = scope.unscope(:limit, :offset, :order).count
 

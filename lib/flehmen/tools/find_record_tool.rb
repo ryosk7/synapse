@@ -2,10 +2,10 @@
 
 require "json"
 
-module Synapse
+module Flehmen
   module Tools
     class FindRecordTool < FastMcp::Tool
-      tool_name "synapse_find_record"
+      tool_name "flehmen_find_record"
       description "Find a single record by its primary key (usually ID)"
 
       arguments do
@@ -19,13 +19,13 @@ module Synapse
       )
 
       def call(model_name:, id:)
-        info = Synapse.model_registry.find_model(model_name)
+        info = Flehmen.model_registry.find_model(model_name)
         return JSON.generate({ error: "Model not found: #{model_name}" }) unless info
 
         record = info[:klass].find_by(info[:primary_key] => id)
         return JSON.generate({ error: "Record not found: #{model_name}##{id}" }) unless record
 
-        serializer = Synapse::Serializer.new
+        serializer = Flehmen::Serializer.new
         JSON.generate(serializer.serialize_record(record))
       end
     end

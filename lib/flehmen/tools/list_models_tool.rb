@@ -2,10 +2,10 @@
 
 require "json"
 
-module Synapse
+module Flehmen
   module Tools
     class ListModelsTool < FastMcp::Tool
-      tool_name "synapse_list_models"
+      tool_name "flehmen_list_models"
       description "List all available ActiveRecord models with their table names, column counts, and association counts"
 
       annotations(
@@ -14,7 +14,7 @@ module Synapse
       )
 
       def call(**_args)
-        registry = Synapse.model_registry
+        registry = Flehmen.model_registry
         models = registry.model_names.map do |name|
           info = registry.find_model(name)
           {

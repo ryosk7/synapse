@@ -2,10 +2,10 @@
 
 require "json"
 
-module Synapse
+module Flehmen
   module Tools
     class SearchRecordsTool < FastMcp::Tool
-      tool_name "synapse_search_records"
+      tool_name "flehmen_search_records"
       description 'Search records with filter conditions. Each condition has a field, operator (eq, not_eq, gt, gte, lt, lte, like, in, null, not_null), and value. Example conditions: [{"field":"status","operator":"eq","value":"active"}]'
 
       arguments do
@@ -23,12 +23,12 @@ module Synapse
       )
 
       def call(model_name:, conditions: nil, order_by: nil, order_dir: "asc", limit: nil, offset: nil)
-        info = Synapse.model_registry.find_model(model_name)
+        info = Flehmen.model_registry.find_model(model_name)
         return JSON.generate({ error: "Model not found: #{model_name}" }) unless info
 
         parsed_conditions = conditions ? JSON.parse(conditions) : []
 
-        builder = Synapse::QueryBuilder.new(info)
+        builder = Flehmen::QueryBuilder.new(info)
         records = builder.build(
           conditions: parsed_conditions,
           order_by: order_by,
@@ -37,7 +37,7 @@ module Synapse
           offset: offset
         )
 
-        serializer = Synapse::Serializer.new
+        serializer = Flehmen::Serializer.new
         result = {
           model: model_name,
           count: records.size,

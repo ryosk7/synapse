@@ -2,17 +2,17 @@
 
 require "json"
 
-module Synapse
+module Flehmen
   module Resources
     class SchemaOverviewResource < FastMcp::Resource
-      uri "synapse://schema/overview"
+      uri "flehmen://schema/overview"
       resource_name "Database Schema Overview"
       description "Complete overview of all available models, their columns, associations, and enums"
       mime_type "application/json"
 
       def content
-        registry = Synapse.model_registry
-        filter = Synapse::FieldFilter.new
+        registry = Flehmen.model_registry
+        filter = Flehmen::FieldFilter.new
 
         overview = registry.model_names.map do |name|
           info = registry.find_model(name)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Synapse
+module Flehmen
   class Serializer
     def initialize(field_filter = FieldFilter.new)
       @field_filter = field_filter

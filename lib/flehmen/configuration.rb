@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Synapse
+module Flehmen
   class Configuration
     attr_accessor :models,
                   :exclude_models,

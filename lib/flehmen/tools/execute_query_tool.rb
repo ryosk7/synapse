@@ -2,10 +2,10 @@
 
 require "json"
 
-module Synapse
+module Flehmen
   module Tools
     class ExecuteQueryTool < FastMcp::Tool
-      tool_name "synapse_execute_query"
+      tool_name "flehmen_execute_query"
       description "Execute a read-only SQL SELECT query. Only available if enabled in configuration. Only SELECT statements are allowed."
 
       FORBIDDEN_KEYWORDS = %w[
@@ -25,7 +25,7 @@ module Synapse
       )
 
       def call(sql:, limit: nil)
-        unless Synapse.configuration.enable_raw_sql
+        unless Flehmen.configuration.enable_raw_sql
           return JSON.generate({ error: "Raw SQL execution is disabled. Set config.enable_raw_sql = true to enable." })
         end
 
@@ -39,7 +39,7 @@ module Synapse
           return JSON.generate({ error: "Query contains forbidden keywords" })
         end
 
-        max = Synapse.configuration.max_results
+        max = Flehmen.configuration.max_results
         effective_limit = limit ? [limit.to_i, max].min : max
 
         unless normalized.match?(/\bLIMIT\b/i)
@@ -48,7 +48,7 @@ module Synapse
 
         result = ActiveRecord::Base.connection.exec_query(normalized)
 
-        filter = Synapse::FieldFilter.new
+        filter = Flehmen::FieldFilter.new
         rows = result.to_a.map do |row|
           filter.filter_attributes("_raw_sql", row)
         end

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module Synapse
+module Flehmen
   class ModelRegistry
     attr_reader :models
 
-    def initialize(config = Synapse.configuration)
+    def initialize(config = Flehmen.configuration)
       @config = config
       @models = {}
     end

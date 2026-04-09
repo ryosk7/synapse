@@ -2,10 +2,10 @@
 
 require "json"
 
-module Synapse
+module Flehmen
   module Tools
     class ShowAssociationsTool < FastMcp::Tool
-      tool_name "synapse_show_associations"
+      tool_name "flehmen_show_associations"
       description "Navigate a record's associations. Given a model, record ID, and association name, returns the associated records."
 
       arguments do
@@ -22,7 +22,7 @@ module Synapse
       )
 
       def call(model_name:, id:, association_name:, limit: nil, offset: nil)
-        info = Synapse.model_registry.find_model(model_name)
+        info = Flehmen.model_registry.find_model(model_name)
         return JSON.generate({ error: "Model not found: #{model_name}" }) unless info
 
         # Validate association name against declared associations
@@ -37,8 +37,8 @@ module Synapse
         assoc_meta = info[:associations].find { |a| a[:name] == association_name }
         associated = record.public_send(association_name)
 
-        serializer = Synapse::Serializer.new
-        max = Synapse.configuration.max_results
+        serializer = Flehmen::Serializer.new
+        max = Flehmen.configuration.max_results
 
         if %w[has_many has_and_belongs_to_many].include?(assoc_meta[:type])
           effective_limit = limit ? [limit.to_i, max].min : max

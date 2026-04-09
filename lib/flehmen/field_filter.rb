@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module Synapse
+module Flehmen
   class FieldFilter
     FILTERED_PLACEHOLDER = "[FILTERED]"
 
-    def initialize(config = Synapse.configuration)
+    def initialize(config = Flehmen.configuration)
       @global_sensitive = config.sensitive_fields.map(&:to_s)
       @model_sensitive = config.model_sensitive_fields.transform_keys(&:to_s)
                                                        .transform_values { |v| v.map(&:to_s) }

@@ -2,10 +2,10 @@
 
 require "json"
 
-module Synapse
+module Flehmen
   module Tools
     class DescribeModelTool < FastMcp::Tool
-      tool_name "synapse_describe_model"
+      tool_name "flehmen_describe_model"
       description "Show the full schema for a model: columns (name, type, null, default), associations (name, type, target class), and enum definitions"
 
       arguments do
@@ -18,10 +18,10 @@ module Synapse
       )
 
       def call(model_name:)
-        info = Synapse.model_registry.find_model(model_name)
+        info = Flehmen.model_registry.find_model(model_name)
         return JSON.generate({ error: "Model not found: #{model_name}" }) unless info
 
-        filter = Synapse::FieldFilter.new
+        filter = Flehmen::FieldFilter.new
         result = {
           model: model_name,
           table_name: info[:table_name],

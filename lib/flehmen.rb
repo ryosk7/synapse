@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
 require "fast_mcp"
-require_relative "synapse/version"
-require_relative "synapse/configuration"
-require_relative "synapse/model_registry"
-require_relative "synapse/field_filter"
-require_relative "synapse/query_builder"
-require_relative "synapse/serializer"
-require_relative "synapse/tools/list_models_tool"
-require_relative "synapse/tools/describe_model_tool"
-require_relative "synapse/tools/find_record_tool"
-require_relative "synapse/tools/search_records_tool"
-require_relative "synapse/tools/count_records_tool"
-require_relative "synapse/tools/show_associations_tool"
-require_relative "synapse/tools/execute_query_tool"
-require_relative "synapse/resources/schema_overview_resource"
+require_relative "flehmen/version"
+require_relative "flehmen/configuration"
+require_relative "flehmen/model_registry"
+require_relative "flehmen/field_filter"
+require_relative "flehmen/query_builder"
+require_relative "flehmen/serializer"
+require_relative "flehmen/tools/list_models_tool"
+require_relative "flehmen/tools/describe_model_tool"
+require_relative "flehmen/tools/find_record_tool"
+require_relative "flehmen/tools/search_records_tool"
+require_relative "flehmen/tools/count_records_tool"
+require_relative "flehmen/tools/show_associations_tool"
+require_relative "flehmen/tools/execute_query_tool"
+require_relative "flehmen/resources/schema_overview_resource"
 
-module Synapse
+module Flehmen
   class << self
     attr_writer :configuration
 
@@ -50,8 +50,8 @@ module Synapse
 
     def mount_in_rails(app, options = {})
       opts = {
-        name: "synapse",
-        version: Synapse::VERSION,
+        name: "flehmen",
+        version: Flehmen::VERSION,
         path_prefix: options.delete(:path_prefix) || "/mcp"
       }.merge(options)
 
@@ -65,8 +65,8 @@ module Synapse
 
     def build_server
       server = FastMcp::Server.new(
-        name: "synapse",
-        version: Synapse::VERSION
+        name: "flehmen",
+        version: Flehmen::VERSION
       )
       register_tools(server)
       register_resources(server)

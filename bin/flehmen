@@ -9,7 +9,7 @@ ENV["RAILS_ENV"] ||= "development"
 require File.join(app_path, "config", "environment")
 Rails.application.eager_load!
 
-require "synapse"
+require "flehmen"
 
-Synapse.boot!
-Synapse.start_server!
+Flehmen.boot!
+Flehmen.start_server!
