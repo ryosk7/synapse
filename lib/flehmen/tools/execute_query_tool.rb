@@ -11,7 +11,7 @@ module Flehmen
       FORBIDDEN_KEYWORDS = %w[
         INSERT UPDATE DELETE DROP ALTER CREATE TRUNCATE
         GRANT REVOKE REPLACE MERGE CALL EXEC EXECUTE
-        SET LOCK UNLOCK
+        SET LOCK UNLOCK INTO LOAD COPY PRAGMA
       ].freeze
 
       arguments do
@@ -42,11 +42,15 @@ module Flehmen
         max = Flehmen.configuration.max_results
         effective_limit = limit ? [limit.to_i, max].min : max
 
-        unless normalized.match?(/\bLIMIT\b/i)
+        if normalized.match?(/\bLIMIT\b/i)
+          normalized = normalized.gsub(/\bLIMIT\s+\d+/i, "LIMIT #{effective_limit}")
+        else
           normalized = "#{normalized} LIMIT #{effective_limit}"
         end
 
-        result = ActiveRecord::Base.connection.exec_query(normalized)
+        result = ActiveRecord::Base.while_preventing_writes(Flehmen.configuration.read_only_connection) do
+          ActiveRecord::Base.connection.exec_query(normalized)
+        end
 
         filter = Flehmen::FieldFilter.new
         rows = result.to_a.map do |row|

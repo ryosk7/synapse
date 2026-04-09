@@ -28,7 +28,7 @@ module Flehmen
         # Validate association name against declared associations
         valid_associations = info[:associations].map { |a| a[:name] }
         unless valid_associations.include?(association_name)
-          return JSON.generate({ error: "Unknown association: #{association_name}. Available: #{valid_associations.join(', ')}" })
+          return JSON.generate({ error: "Unknown association: #{association_name}" })
         end
 
         record = info[:klass].find_by(info[:primary_key] => id)
