@@ -9,7 +9,7 @@ A Ruby gem that exposes Rails ActiveRecord models to Claude Desktop via the Mode
 Add to your Gemfile:
 
 ```ruby
-gem "flehmen", github: "ryosk7/flehmen"
+gem "flehmen"
 ```
 
 ```bash
@@ -202,9 +202,9 @@ Flehmen.mount_in_rails(app)
 
 - Ruby >= 3.1.0
 - `fast-mcp` ~> 1.5
-- `activerecord` >= 7.0
-- `activesupport` >= 7.0
-- `railties` >= 7.0
+- `activerecord` ~> 7.0
+- `activesupport` ~> 7.0
+- `railties` ~> 7.0
 
 ## License
 
