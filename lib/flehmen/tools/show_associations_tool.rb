@@ -12,8 +12,8 @@ module Flehmen
         required(:model_name).filled(:string).description("Name of the source model class")
         required(:id).filled(:string).description("Primary key of the source record")
         required(:association_name).filled(:string).description("Name of the association to navigate")
-        optional(:limit).filled(:integer).description("Max associated records to return")
-        optional(:offset).filled(:integer).description("Number of records to skip")
+        optional(:limit).filled(:integer).value(gteq?: 1, lteq?: 100).description("Max associated records to return")
+        optional(:offset).filled(:integer).value(gteq?: 0, lteq?: 10000).description("Number of records to skip")
       end
 
       annotations(

@@ -46,8 +46,8 @@ module Flehmen
       when "lte"      then scope.where(table[field].lteq(value))
       when "like"     then scope.where(table[field].matches(sanitize_like(value)))
       when "not_like" then scope.where(table[field].does_not_match(sanitize_like(value)))
-      when "in"       then scope.where(table[field].in(Array(value)))
-      when "not_in"   then scope.where(table[field].not_in(Array(value)))
+      when "in"       then scope.where(table[field].in(Array(value).first(@config.max_results)))
+      when "not_in"   then scope.where(table[field].not_in(Array(value).first(@config.max_results)))
       when "null"     then scope.where(table[field].eq(nil))
       when "not_null" then scope.where(table[field].not_eq(nil))
       end

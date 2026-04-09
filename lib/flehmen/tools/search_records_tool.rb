@@ -13,8 +13,8 @@ module Flehmen
         optional(:conditions).filled(:string).description('JSON array of conditions: [{"field":"...", "operator":"...", "value":"..."}]')
         optional(:order_by).filled(:string).description("Column name to order by")
         optional(:order_dir).filled(:string).description("Order direction: 'asc' or 'desc'")
-        optional(:limit).filled(:integer).description("Max records to return (capped by server config)")
-        optional(:offset).filled(:integer).description("Number of records to skip for pagination")
+        optional(:limit).filled(:integer).value(gteq?: 1, lteq?: 100).description("Max records to return (capped by server config)")
+        optional(:offset).filled(:integer).value(gteq?: 0, lteq?: 10000).description("Number of records to skip for pagination")
       end
 
       annotations(
