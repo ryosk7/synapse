@@ -7,16 +7,49 @@ require_relative "flehmen/model_registry"
 require_relative "flehmen/field_filter"
 require_relative "flehmen/query_builder"
 require_relative "flehmen/serializer"
+
+# Catalog layer
+require_relative "flehmen/catalog/field_definition"
+require_relative "flehmen/catalog/param_definition"
+require_relative "flehmen/catalog/filter_definition"
+require_relative "flehmen/catalog/resource_definition"
+require_relative "flehmen/catalog/template_definition"
+require_relative "flehmen/catalog/policy_definition"
+require_relative "flehmen/catalog/registry"
+
+# Plan layer
+require_relative "flehmen/plan/validation_result"
+require_relative "flehmen/plan/validator"
+
+# Execution layer
+require_relative "flehmen/execution/compiler"
+require_relative "flehmen/execution/runner"
+
+# Presentation layer
+require_relative "flehmen/presentation/masker"
+require_relative "flehmen/presentation/presenter"
+
+# Audit layer
+require_relative "flehmen/audit/logger"
+
+# MCP tools & resources
 require_relative "flehmen/tools/base"
+require_relative "flehmen/tools/query_tool"
+require_relative "flehmen/tools/catalog_tool"
+# Legacy tools (deprecated — will be removed in a future version)
 require_relative "flehmen/tools/list_models_tool"
 require_relative "flehmen/tools/describe_model_tool"
 require_relative "flehmen/tools/find_record_tool"
 require_relative "flehmen/tools/search_records_tool"
 require_relative "flehmen/tools/count_records_tool"
 require_relative "flehmen/tools/show_associations_tool"
+require_relative "flehmen/resources/catalog_resource"
 require_relative "flehmen/resources/schema_overview_resource"
 
 module Flehmen
+  # Raised when a write operation is attempted in read-only mode.
+  ReadOnlyViolationError = Class.new(StandardError)
+
   class << self
     attr_writer :configuration
 
@@ -31,6 +64,40 @@ module Flehmen
     def reset_configuration!
       @configuration = Configuration.new
       @model_registry = nil
+    end
+
+    # Catalog DSL entry point.
+    #
+    #   Flehmen.catalog do |c|
+    #     c.resource :Customer, model: "Customer" do |r|
+    #       r.field :id,    classification: :public
+    #       r.field :email, classification: :personal, mask: :email
+    #     end
+    #
+    #     c.template :customer_overview do |t|
+    #       t.description "顧客基本情報"
+    #       t.resource :Customer
+    #       t.fields [:id, :email]
+    #       t.param :customer_id, type: :integer, required: true
+    #       t.filter :by_id, field: :id, operator: :eq, param: :customer_id
+    #     end
+    #
+    #     c.policy :support do |p|
+    #       p.allow_templates :customer_overview
+    #       p.max_results 50
+    #     end
+    #   end
+    def catalog(&block)
+      yield(catalog_registry) if block_given?
+      catalog_registry
+    end
+
+    def catalog_registry
+      @catalog_registry ||= Catalog::Registry.new
+    end
+
+    def reset_catalog!
+      @catalog_registry = Catalog::Registry.new
     end
 
     # Lazily discover models on first access
@@ -105,6 +172,10 @@ module Flehmen
     end
 
     def register_tools(server)
+      # Intent-first tools (v2)
+      server.register_tool(Tools::QueryTool)
+      server.register_tool(Tools::CatalogTool)
+      # Legacy query-first tools (deprecated)
       server.register_tool(Tools::ListModelsTool)
       server.register_tool(Tools::DescribeModelTool)
       server.register_tool(Tools::FindRecordTool)
@@ -114,6 +185,7 @@ module Flehmen
     end
 
     def register_resources(server)
+      server.register_resource(Resources::CatalogResource)
       server.register_resource(Resources::SchemaOverviewResource)
     end
   end
