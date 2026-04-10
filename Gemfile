@@ -7,4 +7,5 @@ gemspec
 group :development, :test do
   gem "rspec", "~> 3.0"
   gem "sqlite3", "~> 2.0"
+  gem "activerecord", ">= 7.2"
 end
