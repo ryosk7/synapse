@@ -17,11 +17,6 @@ module Flehmen
         optional(:offset).filled(:integer).value(gteq?: 0, lteq?: 10000).description("Number of records to skip for pagination")
       end
 
-      annotations(
-        read_only_hint: true,
-        open_world_hint: false
-      )
-
       def execute(model_name:, conditions: nil, order_by: nil, order_dir: "asc", limit: nil, offset: nil)
         info = Flehmen.model_registry.find_model(model_name)
         return JSON.generate({ error: "Model not found: #{model_name}" }) unless info

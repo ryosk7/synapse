@@ -12,11 +12,6 @@ module Flehmen
         required(:model_name).filled(:string).description("Name of the model class, e.g. 'User' or 'Post'")
       end
 
-      annotations(
-        read_only_hint: true,
-        open_world_hint: false
-      )
-
       def execute(model_name:)
         info = Flehmen.model_registry.find_model(model_name)
         return JSON.generate({ error: "Model not found: #{model_name}" }) unless info

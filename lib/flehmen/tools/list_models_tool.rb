@@ -8,11 +8,6 @@ module Flehmen
       tool_name "flehmen_list_models"
       description "List all available ActiveRecord models with their table names, column counts, and association counts"
 
-      annotations(
-        read_only_hint: true,
-        open_world_hint: false
-      )
-
       def execute(**_args)
         registry = Flehmen.model_registry
         models = registry.model_names.map do |name|

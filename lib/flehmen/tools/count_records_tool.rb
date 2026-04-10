@@ -13,11 +13,6 @@ module Flehmen
         optional(:conditions).filled(:string).description('JSON array of conditions: [{"field":"...", "operator":"...", "value":"..."}]')
       end
 
-      annotations(
-        read_only_hint: true,
-        open_world_hint: false
-      )
-
       def execute(model_name:, conditions: nil)
         info = Flehmen.model_registry.find_model(model_name)
         return JSON.generate({ error: "Model not found: #{model_name}" }) unless info
