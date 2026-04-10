@@ -63,6 +63,53 @@ Add to `claude_desktop_config.json`:
 | `model_sensitive_fields` | `Hash` | `{}` | Per-model sensitive fields |
 | `max_results` | `Integer` | `100` | Maximum records returned by any query |
 | `read_only_connection` | `Boolean` | `true` | Wraps all queries in `while_preventing_writes` to block accidental writes at the Rails level |
+| `auth_token` | `String` or `nil` | `nil` | Static Bearer token for simple authentication (mutually exclusive with `authenticate`) |
+| `authenticate` | `Proc` or `nil` | `nil` | Custom auth callback `(headers) -> user \| truthy \| nil` (mutually exclusive with `auth_token`) |
+
+## Authentication
+
+Authentication is opt-in. By default the MCP endpoint is open, so it is strongly recommended to either restrict access via `localhost_only: true` or configure one of the two authentication modes below.
+
+### Mode 1: Static token
+
+The simplest option. Uses FastMcp's built-in Bearer token authentication. Requests must include `Authorization: Bearer <token>`.
+
+```ruby
+Flehmen.configure do |config|
+  config.auth_token = ENV['MCP_AUTH_TOKEN']
+end
+
+Flehmen.mount_in_rails(Rails.application, path_prefix: "/mcp")
+```
+
+### Mode 2: Custom authentication callback
+
+For JWT, per-user API keys, or any other auth logic. Provide a Proc that receives the request headers hash and returns a truthy value (typically a user object) to allow, or `nil`/`false` to deny.
+
+Header keys are lowercase and hyphen-separated (e.g. `'authorization'`, `'x-api-key'`).
+
+```ruby
+Flehmen.configure do |config|
+  config.authenticate = ->(headers) {
+    token = headers['authorization']&.sub(/\ABearer /, '')
+    User.find_by(api_token: token)
+  }
+end
+```
+
+The return value is exposed as `current_user` inside any tool subclass:
+
+```ruby
+class MyCustomTool < Flehmen::Tools::Base
+  def execute
+    "Hello, #{current_user.name}"
+  end
+end
+```
+
+> **Note:** `auth_token` and `authenticate` are mutually exclusive. Setting both raises `Flehmen::ConfigurationError`.
+
+> **Note:** The STDIO transport (`bin/flehmen`) skips authentication regardless of this setting, as it is inherently local.
 
 ### Default sensitive fields
 

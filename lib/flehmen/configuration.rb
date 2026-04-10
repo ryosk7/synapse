@@ -1,13 +1,17 @@
 # frozen_string_literal: true
 
 module Flehmen
+  ConfigurationError = Class.new(StandardError)
+
   class Configuration
     attr_accessor :models,
                   :exclude_models,
                   :sensitive_fields,
                   :model_sensitive_fields,
                   :max_results,
-                  :read_only_connection
+                  :read_only_connection,
+                  :auth_token,
+                  :authenticate
 
     def initialize
       @models = :all
@@ -21,6 +25,20 @@ module Flehmen
       @model_sensitive_fields = {}
       @max_results = 100
       @read_only_connection = true
+      @auth_token = nil
+      @authenticate = nil
+    end
+
+    def auth_enabled?
+      !!(auth_token || authenticate)
+    end
+
+    def validate!
+      return unless auth_token && authenticate
+
+      raise ConfigurationError,
+            "auth_token and authenticate cannot both be set. " \
+            "Use auth_token for simple static token auth, or authenticate for custom auth logic."
     end
   end
 end
