@@ -12,10 +12,6 @@ Add to your Gemfile:
 gem "flehmen"
 ```
 
-```bash
-bundle install
-```
-
 ## Setup
 
 ### Rails initializer
